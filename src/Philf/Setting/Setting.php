@@ -121,7 +121,13 @@ class Setting {
 
         if($ts !== array_get($this->settings, $key, $ts))
         {
-            return array_get($this->settings, $key);
+            $array = array_get($this->settings, $key);
+
+            if (! is_null($this->fallback) and $this->fallback->fallbackHas($key)) {
+                $array = array_replace_recursive($this->fallback->fallbackGet($key, $default), $array);
+            }
+
+            return $array;
         }
 
         if ( ! is_null($this->fallback) and $this->fallback->fallbackHas($key))
